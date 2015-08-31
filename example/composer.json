@@ -1,0 +1,22 @@
+{
+    "name": "ww24/php-gracenote-example",
+    "description": "PHP Gracenote API Wrapper Example Code",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Takenori Nakagawa",
+            "email": "ww24gm@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "slim/slim": "~2.6",
+        "guzzlehttp/guzzle": "~6.0",
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gracenote\\Rhythm\\": "../Rhythm/"
+        }
+    }
+}
