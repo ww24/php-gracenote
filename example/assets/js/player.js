@@ -38,6 +38,12 @@ $(function () {
   var $artwork = $(".player-wrapper .artwork");
   var $player = $(".player-wrapper audio");
 
+  $player.on("ended", function () {
+    var $results = $result.find("> li");
+    var index = Math.floor(Math.random() * $results.length);
+    $results.eq(index).trigger("click");
+  });
+
   $artwork.click(function () {
     var player = $player.get(0);
     
