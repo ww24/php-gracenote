@@ -1,7 +1,17 @@
 <?php
 
+$apikey = file_get_contents(__DIR__ . "/apikey.json");
+$apikey = json_decode($apikey);
+
+if ($apikey === null) {
+    die(json_encode([
+        'status' => 'ERROR',
+        'error' => 'apikey.json is required!',
+    ]));
+}
+
 // Gracenote API
-define('GRACENOTE_CLIENT_ID', '7514112-DACDA96EDADA824BDA8735B8921CDEC7');
+define('GRACENOTE_CLIENT_ID', $apikey->gracenote_client_id);
 // iTunes API
 define('ITUNES_API_END_POINT', 'https://itunes.apple.com/search?country=JP&entity=song');
 
@@ -78,10 +88,12 @@ $app->get('/create', function () use ($api, $app) {
     // track_title を指定する場合は artist_name は必須です
 
     $params = array_filter($params);
+    $params['return_count'] = 10;
     $res = $api->create($params);
 
     echo json_encode([
         'status'=> $res->STATUS,
+        'radio_id' => isset($res->RADIO) ? $res->RADIO[0]->ID : null,
         'album' => isset($res->ALBUM) ? $res->ALBUM : [],
     ]);
 });
@@ -90,22 +102,23 @@ $app->get('/create', function () use ($api, $app) {
  * Gracenote Rhythem API - event
  *
  * # event
- * - track_skipped - トラックに”skipped”をつける。 プレーキューが移動する
+ * - track_skipped - トラックに"skipped"をつける。 プレーキューが移動する
  * - track_like - トラックに"liked"をつける。プレーキューは移動しない
- * - track_dislike - トラックに”disliked”をつける。 プレーキューがリフレッシュされる
- * - artist_like - アーティストに”liked”をつける。プレーキューは移動しない
- * - artist_dislike - アーティストに”disliked”をつける。 プレーキューがリフレッシュされる
+ * - track_dislike - トラックに"disliked"をつける。 プレーキューがリフレッシュされる
+ * - artist_like - アーティストに"liked"をつける。プレーキューは移動しない
+ * - artist_dislike - アーティストに"disliked"をつける。 プレーキューがリフレッシュされる
  */
 $app->get('/feedback', function () use ($api, $app) {
     $params = $app->request()->params();
 
-    //
-
+    $params['return_count'] = 10;
     // radio_id=RADIO_ID&event=track_played_12345-ABCDEF
-    $res = $api->feedback(/**********/);
+    // radio_id=RADIO_ID&event=track_dislike_12345-ABCDEF;track_skipped_12345-ABCDEF
+    $res = $api->feedback($params);
 
     echo json_encode([
         'status' => $res->STATUS,
+        'radio_id' => isset($res->RADIO) ? $res->RADIO[0]->ID : null,
         'album' => isset($res->ALBUM) ? $res->ALBUM : [],
     ]);
 });

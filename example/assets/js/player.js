@@ -3,6 +3,8 @@
  */
 
 $(function () {
+  var radio_id = null;
+
   $.getJSON("/fieldvalues").then(function (data) {
     Object.keys(data).forEach(function (type) {
       data[type].unshift({
@@ -30,26 +32,7 @@ $(function () {
     // debug
     printURL("/create?" + querystring);
 
-    $.getJSON("/create?" + querystring).then(function (data) {
-      console.log(data);
-
-      var $html = data.album.map(function (song) {
-        var $li = $("<li class='play'>");
-        var artist = ((song.TRACK[0].ARTIST || song.ARTIST)[0].VALUE).split(", ")[0];
-        $li.data("metadata", {
-          title: song.TRACK[0].TITLE[0].VALUE.trim(),
-          artist: artist.trim()
-        });
-        var $ul = $("<ul>");
-        $ul.append("<li>artist: " + artist + "</li>");
-        $ul.append("<li>genre:  " + song.GENRE[0].VALUE + "</li>");
-        $ul.append("<li>title:  " + song.TRACK[0].TITLE[0].VALUE + "</li>");
-        $li.append($ul);
-        return $li;
-      });
-
-      $result.html($html);
-    });
+    $.getJSON("/create?" + querystring).then(render);
   });
 
   var $artwork = $(".player-wrapper .artwork");
@@ -90,11 +73,58 @@ $(function () {
       $artwork.css("background-image", "url(" + track.artworkUrl100 + ")");
       $player.attr("src", track.previewUrl);
       $player.get(0).play();
+
+      feedback("track_played", metadata.track_gnid);
     });
   });
+
+  function render(data) {
+    console.log(data);
+
+    radio_id = data.radio_id;
+
+    var $html = data.album.map(function (song) {
+      var $li = $("<li class='play'>");
+      var artist = ((song.TRACK[0].ARTIST || song.ARTIST)[0].VALUE).split(", ")[0];
+      var metadata = {
+        title: song.TRACK[0].TITLE[0].VALUE.trim(),
+        artist: artist.trim(),
+        artist_gnid: song.GN_ID,
+        track_gnid: song.TRACK[0].GN_ID
+      };
+      $li.data("metadata", metadata);
+      var $ul = $("<ul>");
+      $ul.append("<li>artist:  " + artist + "</li>");
+      $ul.append("<li>genre:   " + song.GENRE[0].VALUE + "</li>");
+      $ul.append("<li>title:   " + song.TRACK[0].TITLE[0].VALUE + "</li>");
+      $ul.append("<li>feedback:<button class='like'>LIKE</button> <button class='dislike'>DISLIKE</button></li>");
+      $li.append($ul);
+
+      $ul.find(".like").click(function (e) {
+        e.stopPropagation();
+        feedback("track_like", metadata.track_gnid);
+      });
+      $ul.find(".dislike").click(function (e) {
+        e.stopPropagation();
+        feedback("track_dislike", metadata.track_gnid);
+      });
+
+      return $li;
+    });
+
+    $result.html($html);
+  }
 
   function printURL(pathname, method) {
     method = method || "GET";
     console.info(method.toUpperCase() + " " + location.protocol + "//" + location.host + pathname);
+  }
+
+  function feedback(event_name, gnid) {
+    var url = "/feedback?radio_id=" + radio_id + "&event=" + event_name + "_" + gnid;
+    // debug
+    printURL(url);
+
+    $.getJSON(url).then(render);
   }
 });
