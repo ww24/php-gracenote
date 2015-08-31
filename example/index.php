@@ -10,8 +10,10 @@ if ($apikey === null) {
     ]));
 }
 
-// Gracenote API
-define('GRACENOTE_CLIENT_ID', $apikey->gracenote_client_id);
+if (isset($apikey->gracenote->user_id) === false) {
+    $apikey->gracenote->user_id = null;
+}
+
 // iTunes API
 define('ITUNES_API_END_POINT', 'https://itunes.apple.com/search?country=JP&entity=song');
 
@@ -21,12 +23,12 @@ use Gracenote\Rhythm\RhythmAPI;
 use GuzzleHttp\Client;
 
 $app = new \Slim\Slim();
-$api = new RhythmAPI(GRACENOTE_CLIENT_ID);
+$api = new RhythmAPI($apikey->gracenote->client_id, $apikey->gracenote->user_id);
 
 $app->get('/', function () use ($api) {
     echo json_encode([
         'status'=> 'ok',
-        'client_id' => $api->user_id,
+        'user_id' => $api->user_id,
     ]);
 });
 

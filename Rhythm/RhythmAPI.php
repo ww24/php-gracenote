@@ -29,6 +29,7 @@ class RhythmAPI
     public function __construct($client_id, $user_id = null)
     {
         $this->client_id = $client_id;
+        $this->user_id = $user_id;
         if ($user_id === null) {
             $this->user_id = static::register();
         }
@@ -87,7 +88,7 @@ class RhythmAPI
     {
         $c = explode('-', $this->client_id)[0];
         $end_point = str_replace('XXXXXXX', $c, static::END_POINT);
-        
+
         if (isset($this->user_id)) {
             $params['user'] = $this->user_id;
         }

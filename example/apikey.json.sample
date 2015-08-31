@@ -1,3 +1,5 @@
 {
-	"gracenote_client_id": "YOUR API KEY HERE!"
+  "gracenote": {
+    "client_id": "YOUR API KEY HERE!"
+  }
 }
