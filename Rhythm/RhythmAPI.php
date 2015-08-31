@@ -14,6 +14,8 @@ use GuzzleHttp\Client;
 class RhythmAPI
 {
     const END_POINT = 'https://cXXXXXXX.web.cddbp.net/webapi/json/1.0';
+    const FIELDS = ['RADIOGENRE', 'RADIOMOOD', 'RADIOERA'];
+    const EVENTS = ['track_played', 'track_skipped', 'track_like', 'track_dislike', 'artist_like', 'artist_dislike'];
 
     private $client_id;
     private $user_id;
