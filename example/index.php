@@ -15,7 +15,7 @@ if (isset($apikey->gracenote->user_id) === false) {
 }
 
 // iTunes API
-define('ITUNES_API_END_POINT', 'https://itunes.apple.com/search?country=JP&entity=song');
+define('ITUNES_API_END_POINT', 'https://itunes.apple.com/search');
 
 require 'vendor/autoload.php';
 
@@ -51,6 +51,7 @@ $app->get('/itunes', function () use ($app) {
         'query' => [
             'country' => 'JP',
             'entity' => 'musicTrack',
+            'attribute' => 'songTerm',
             'term' => $params['term'],
             'limit' => 10,
         ]
