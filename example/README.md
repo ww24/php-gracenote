@@ -30,5 +30,5 @@ cp apikey.json.sample apikey.json
 How to start
 ------------
 * `composer install`
-* `php -S localhost:8080`
+* `php -S 0.0.0.0:8080`
 * open [`http://localhost:8080/client.html`](http://localhost:8080/client.html) on your browser.
