@@ -5,6 +5,7 @@
 $(function () {
   var radio_id = null;
 
+  printURL("/fieldvalues");
   $.getJSON("/fieldvalues").then(function (data) {
     Object.keys(data).forEach(function (type) {
       data[type].unshift({
@@ -46,7 +47,7 @@ $(function () {
 
   $artwork.click(function () {
     var player = $player.get(0);
-    
+
     // for debug
     p = player;
 

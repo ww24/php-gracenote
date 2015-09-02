@@ -23,6 +23,10 @@ use Gracenote\Rhythm\RhythmAPI;
 use GuzzleHttp\Client;
 
 $app = new \Slim\Slim();
+
+// CORS
+$app->response->headers->set('Access-Control-Allow-Origin', '*');
+
 $api = new RhythmAPI($apikey->gracenote->client_id, $apikey->gracenote->user_id);
 
 $app->get('/', function () use ($api) {
@@ -46,15 +50,16 @@ $app->get('/', function () use ($api) {
 $app->get('/itunes', function () use ($app) {
     $params = $app->request()->params();
 
+    $params = array_merge([
+        'country' => 'JP',
+        'entity' => 'musicTrack',
+        'attribute' => 'songTerm',
+        'limit' => 10,
+    ], $params);
+
     $client = new Client();
     $res = $client->get(ITUNES_API_END_POINT, [
-        'query' => [
-            'country' => 'JP',
-            'entity' => 'musicTrack',
-            'attribute' => 'songTerm',
-            'term' => $params['term'],
-            'limit' => 10,
-        ]
+        'query' => $params,
     ]);
 
     $data = json_decode($res->getBody());
@@ -91,7 +96,10 @@ $app->get('/create', function () use ($api, $app) {
     // track_title を指定する場合は artist_name は必須です
 
     $params = array_filter($params);
-    $params['return_count'] = 10;
+    $params = array_merge([
+            'return_count' => 10,
+            'select_extended' => 'cover',
+    ], $params);
     $res = $api->create($params);
 
     echo json_encode([
