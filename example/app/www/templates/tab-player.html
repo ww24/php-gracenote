@@ -1,0 +1,11 @@
+<ion-view view-title="Awesome Player">
+  <ion-content class="padding">
+    <div class="list">
+      <a class="item item-thumbnail-left" href="javascript:" ng-repeat="song in Playlist.songs" ng-click="select()">
+        <img ng-attr-src="{{song.URL[0].VALUE}}}">
+        <h2>{{song.TRACK[0].TITLE[0].VALUE}}</h2>
+        <p>{{((song.TRACK[0].ARTIST || song.ARTIST)[0].VALUE).split(", ")[0]}}</p>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

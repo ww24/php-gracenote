@@ -1,0 +1,28 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Playing</h1>
+    <div class="buttons">
+      <button class="button" ng-click="modal.hide()">
+        <i class="icon ion-close"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div class="card">
+      <div class="item item-thumbnail-left">
+        <img ng-attr-src="{{track.art}}">
+        <h2>{{track.title}}</h2>
+        <p>{{track.artist}}</p>
+        <div>
+          <i class="button button-icon icon {{track.icon}}" ng-click="play()"></i>
+          <!-- <ion-spinner icon="ios" style="position: relative; top: 8px; left: 4px"></ion-spinner> -->
+        </div>
+      </div>
+
+      <div class="item item-divider range">
+        <span>{{track.time | time_mmss}}</span>
+        <input type="range" min="0" max="{{track.time_end}}" ng-model="track.time" ng-change="seek()">
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

@@ -1,0 +1,53 @@
+<ion-view view-title="Settings">
+  <ion-content>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">End-point</span>
+        <input type="text" ng-model="Settings.endpoint">
+      </label>
+
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Artist</span>
+        <input type="text" placeholder="Artist" ng-model="Settings.artist">
+      </label>
+
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Title</span>
+        <input type="text" placeholder="Title" ng-model="Settings.title">
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Genre
+        </div>
+        <select ng-model="Settings.genre">
+          <option ng-repeat="item in genres" value="{{item.ID}}">{{item.VALUE}}</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Mood
+        </div>
+        <select ng-model="Settings.mood">
+          <option ng-repeat="item in moods" value="{{item.ID}}">{{item.VALUE}}</option>
+        </select>
+      </label>
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Era
+        </div>
+        <select ng-model="Settings.era">
+          <option ng-repeat="item in eras" value="{{item.ID}}">{{item.VALUE}}</option>
+        </select>
+      </label>
+
+    </div>
+    <div class="padding">
+      <button ng-click="save()" class="button button-block button-positive">
+        Save
+      </button>
+    </div>
+  </ion-content>
+</ion-view>
