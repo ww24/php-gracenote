@@ -122,7 +122,10 @@ $app->get('/create', function () use ($api, $app) {
 $app->get('/feedback', function () use ($api, $app) {
     $params = $app->request()->params();
 
-    $params['return_count'] = 10;
+    $params = array_merge([
+        'return_count' => 10,
+        'select_extended' => 'cover',
+    ], $params);
     // radio_id=RADIO_ID&event=track_played_12345-ABCDEF
     // radio_id=RADIO_ID&event=track_dislike_12345-ABCDEF;track_skipped_12345-ABCDEF
     $res = $api->feedback($params);

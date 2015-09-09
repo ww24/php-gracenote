@@ -29,11 +29,6 @@ angular.module("starter.controllers", [])
     }
   });
 
-  // Gracenote feedback event
-  $scope.feedback = function () {
-    $http.get(Settings.endpoint + "/");
-  };
-
   // play music
   $scope.play = function () {
     var audio = $scope.track.audio;
@@ -92,6 +87,7 @@ angular.module("starter.controllers", [])
 
       console.log(track.previewUrl);
 
+      $scope.radio_id = data.radio_id;
       $scope.track = {
         url: track.previewUrl,
         artist: ((song.TRACK[0].ARTIST || song.ARTIST)[0].VALUE).split(", ")[0],
@@ -101,7 +97,8 @@ angular.module("starter.controllers", [])
         icon: "ion-play",
         audio: null,
         time: 0,
-        time_end: 0
+        time_end: 0,
+        gnid: song.TRACK[0].GN_ID
       };
 
       var audio = new Audio($scope.track.url);
@@ -111,6 +108,10 @@ angular.module("starter.controllers", [])
       audio.addEventListener("progress", function () {
         console.log("progress");
         $scope.track.time_end = Math.floor(audio.seekable.end(0) * 1000);
+      });
+      audio.addEventListener("ended", function () {
+        console.log("ended");
+        Playlist.feedback("track_played", $scope.track.gnid);
       });
 
       audio.addEventListener("timeupdate", function () {

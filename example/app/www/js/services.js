@@ -74,6 +74,19 @@ angular.module("starter.services", [])
     return false;
   };
 
+  // Gracenote feedback event
+  data.feedback = function (event_name, gnid) {
+    $http.get(Settings.endpoint + "/feedback", {
+      params: {
+        radio_id: data.radio_id,
+        event: event_name + "_" + gnid
+      }
+    }).then(function (res) {
+      data.radio_id = res.data.radio_id;
+      data.songs = res.data.album;
+    });
+  };
+
   console.log("Create playlist:", data.create());
 
   return data;
